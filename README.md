@@ -9,5 +9,5 @@
 - Phần này data t xử lí hết ròi, dùng ở phần tabular ý, thạm thời dùng cái 1x1 để train model nhé, mấy cái còn lại t đang xem, nếu cần thì cho zô cx được
 - Tất cá các file ở folder 1x1 đều có số samples như nhau, tọa dộ tương đương, nên merge theo tọa độ là được nha
 - Làm visualize như phần trên
-- Train model thì thử XGB, ExtraTree, LightGBM
+- Train model thì thử XGB, ExtraTree, LightGBM, target nằm ở file này nha hdfs_data\uhi_index_analytics\tabular\long_lat_uhiindex.csv
 - Sau đó thì nhớ trích xuất features importance nha
