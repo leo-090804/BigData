@@ -1,0 +1,13 @@
+pyspark
+pandas
+seaborn
+matplotlib
+geopandas
+shapely
+rasterio
+rioxarray
+pyproj
+affine
+apache-sedona
+PyYAML
+ijson

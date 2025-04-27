@@ -1,0 +1,4 @@
+data/uhi_index_analytics
+hdfs_data/uhi_index_analytics/raw
+**\.venv
+code/uhi_index_analytics/notebook
