@@ -1,0 +1,24 @@
+acccount: "bigdata-storage@bigdata-459214.iam.gserviceaccount.com"
+project_id: "bigdata-459214"
+keyfile_path: "data_pipeline/bigdata-459214-3da1becc124e.json"
+
+# bucket
+bucket_name: "uhi-index"
+
+# raw data
+raw_path:
+  nyco: "raw/nyco.geojson"
+  nysp: "raw/nysp.geojson"
+  nyzd: "raw/nyzd.geojson"
+  canopy: "raw/032010110.tif"
+  building: "raw/building/building.json"
+  street: "LION.geojson"
+  population: "raw/GHS_POP_E2020_GLOBE_R2023A_4326_30ss_V1_0_R5_C11/GHS_POP_E2020_GLOBE_R2023A_4326_30ss_V1_0_R5_C11.tif"
+  aod: "raw/aod_median.tiff"
+  co: "raw/co_20210724_165223.tif"
+  hcho: "raw/hcho_20210724_165223.tif"
+  no2: "raw/no2_20210724_165223.tif"
+  o3: "raw/o3_20210724_165223.tif"
+  so2: "raw/so2_20210724_165223.tif"
+  landsat: "raw/landsat_8.tiff"
+  sentinel: "raw/sentinel_2.tiff"

@@ -1,53 +1,11 @@
 from pyspark.sql.functions import col
 from pyspark.sql.types import StringType, IntegerType, FloatType
-from sedona.spark import SedonaContext
-import yaml
 from pyspark.sql.functions import (
     explode,
     trim,
 )
 
-from tqdm import tqdm
-
-
-HDFS_PREFIX = "hdfs://26.3.217.119:9000"
-READ_DIR = f"{HDFS_PREFIX}/climate_data/uhi_index_analytics/raw/"
-SAVE_DIR = f"{HDFS_PREFIX}/climate_data/uhi_index_analytics/preprocessed/"
-
-
-with open("config.yaml", "r") as file:
-    config = yaml.safe_load(file)
-
-
-def create_spark_session(
-    core: int = 6,
-    driver_menory: str = "8g",
-):
-    # Create a Sedona Context using individual config calls
-    builder = SedonaContext.builder()
-
-    # Set application name
-    builder = builder.config("spark.app.name", "GeoSpatialPreprocessing")
-
-    # Add each configuration individually
-    builder = builder.config(
-        "spark.jars.packages",
-        "org.apache.sedona:sedona-spark-shaded-3.0_2.12:1.4.1,org.datasyslab:geotools-wrapper:1.4.0-28.2",
-    )
-    builder = builder.master(f"local[{core}]")
-    builder = builder.config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    builder = builder.config("spark.sql.extensions", "org.apache.sedona.sql.SedonaSqlExtensions")
-    builder = builder.config("spark.sql.catalog.sedona", "org.apache.sedona.sql.SpatialCatalog")
-    builder = builder.config("spark.sql.catalog.sedona.options", "{}")
-    builder = builder.config("spark.driver.memory", f"{driver_menory}")
-
-    # Create and return the Sedona context
-    sedona = builder.getOrCreate()
-
-    return sedona
-
-
-def filter_building(spark, config, readfile, savefile):
+def filter_building(spark, config, readfile, savefile=None):
     COORDS = config["coords"]
 
     # Use multiline option for JSON arrays
@@ -131,11 +89,13 @@ def filter_building(spark, config, readfile, savefile):
         """
     )
 
-    spark.conf.set("spark.hadoop.dfs.replication", "1")
-    final.write.format("parquet").mode("overwrite").save(f"{savefile}")
+    # spark.conf.set("spark.hadoop.dfs.replication", "1")
+    # final.write.format("parquet").mode("overwrite").save(f"{savefile}")
+    
+    return final
 
 
-def filter_street(spark, config, readfile, savefile):
+def filter_street(spark, config, readfile, savefile=None):
     COORDS = config["coords"]
 
     # Read GeoJSON file
@@ -236,11 +196,13 @@ def filter_street(spark, config, readfile, savefile):
     spark.conf.set("spark.hadoop.dfs.replication", "1")
 
     # Save to parquet for efficiency
-    length_df.write.format("parquet").mode("overwrite").save(savefile)
-    print(f"Data saved to {savefile}.parquet")
+    # length_df.write.format("parquet").mode("overwrite").save(savefile)
+    # print(f"Data saved to {savefile}.parquet")
+    
+    return length_df
 
 
-def filter_zoning(spark, config, readfile, savefile):
+def filter_zoning(spark, config, readfile, savefile=None):
     COORDS = config["coords"]
 
     # Read GeoJSON file
@@ -291,23 +253,108 @@ def filter_zoning(spark, config, readfile, savefile):
 
     spatial_df = spark.sql(bbox_query)
 
-    spark.conf.set("spark.hadoop.dfs.replication", "1")
+    # spark.conf.set("spark.hadoop.dfs.replication", "1")
 
-    # Save to parquet for efficiency
-    spatial_df.write.format("parquet").mode("overwrite").save(savefile)
-    print(f"Data saved to {savefile}.parquet")
+#     # Save to parquet for efficiency
+#     # spatial_df.write.format("parquet").mode("overwrite").save(savefile)
+#     # print(f"Data saved to {savefile}.parquet")
+
+    return spatial_df
 
 
-if __name__ == "__main__":
-    spark = create_spark_session()
+def filter_population(spark, config, input_tiff_path, output_tiff_path=None): # Added output_tiff_path=None for consistency, but it won't be used
+    """
+    Clips a population GeoTIFF to the configured bounding box using Sedona SQL.
+    Returns the clipped raster as a DataFrame.
+    """
+    COORDS = config["coords"]
+    # Bbox is initially in EPSG:4326
+    bbox_wkt_epsg4326 = f"POLYGON(({COORDS[0]} {COORDS[1]}, {COORDS[2]} {COORDS[1]}, {COORDS[2]} {COORDS[3]}, {COORDS[0]} {COORDS[3]}, {COORDS[0]} {COORDS[1]}))"
 
-    filter_building(spark, config, f"{READ_DIR}building/building.json", f"{SAVE_DIR}building.parquet")
+    # Get SRID of the input raster
+    srid_row = spark.sql(
+        f"SELECT RS_SRID(RS_FromPath('{input_tiff_path}')) AS srid"
+    ).first()
+    srid_val = srid_row["srid"] if srid_row else 0
+
+    if srid_val == 0:
+        print(f"Warning: Input raster {input_tiff_path} returned SRID=0; ensure correct CRS.")
+
+    # Perform clipping via SQL
+    clipped_df = spark.sql(f"""
+        SELECT RS_Clip(
+            RS_FromPath('{input_tiff_path}'),
+            1,
+            ST_Transform(
+                ST_SetSRID(ST_GeomFromWKT('{bbox_wkt_epsg4326}'), 4326),
+                {srid_val}
+            ),
+            TRUE
+        ) AS clipped_raster
+    """)
+
+    print(f"Population TIFF clipped (SRID {srid_val}) from {input_tiff_path}")
+    return clipped_df
+
+
+def process_canopy(spark, config, input_tiff_path, output_tiff_path=None): # Added output_tiff_path=None for consistency, but it won't be used
+    """
+    Crops and reprojects a canopy GeoTIFF using Sedona SQL.
+    Clips to COORDS in the raster's original CRS, then reprojects to the target CRS from config.
+    Returns the processed raster as a DataFrame.
+    """
+    COORDS = config["coords"]
+    TARGET_CRS_EPSG_CODE = config["gge_engine_config"]["crs"] # e.g., "EPSG:4326"
     
-    filter_street(spark, config, f"{READ_DIR}LION.geojson", f"{SAVE_DIR}street.parquet")
+    try:
+        TARGET_SRID = int(TARGET_CRS_EPSG_CODE.split(":")[1])
+    except (ValueError, IndexError) as e:
+        raise ValueError(f"Invalid TARGET_CRS_EPSG_CODE: {TARGET_CRS_EPSG_CODE}. Expected format 'EPSG:XXXX'. Error: {e}")
 
-    zoning_list = ["nyco", "nysp", "nyzd"]
-    for zoning_file in tqdm(zoning_list, desc="Processing zoning files"):
-        filter_zoning(spark, config, f"{READ_DIR}{zoning_file}.geojson", f"{SAVE_DIR}{zoning_file}.parquet")
+    # Bounding box WKT in the target CRS (e.g., EPSG:4326)
+    bbox_wkt_target_crs = f"POLYGON(({COORDS[0]} {COORDS[1]}, {COORDS[2]} {COORDS[1]}, {COORDS[2]} {COORDS[3]}, {COORDS[0]} {COORDS[3]}, {COORDS[0]} {COORDS[1]}))"
 
-    spark.stop()
-    print("Processing completed successfully.")
+    # Get source SRID
+    row = spark.sql(
+        f"SELECT RS_SRID(RS_FromPath('{input_tiff_path}')) AS srid"
+    ).first()
+    source_srid = row['srid'] if row else 0
+    if source_srid == 0:
+        print(f"Warning: Input raster {input_tiff_path} SRID=0; ensure correct source CRS.")
+
+    # Clip in source CRS
+    clipped_view = "clipped_src"
+    spark.sql(f"""
+        SELECT RS_Clip(
+            RS_FromPath('{input_tiff_path}'),
+            1,
+            ST_Transform(
+                ST_SetSRID(ST_GeomFromWKT('{bbox_wkt_target_crs}'), {TARGET_SRID}),
+                {source_srid}
+            ),
+            TRUE
+        ) AS raster
+    """).createOrReplaceTempView(clipped_view)
+
+    # Reproject to target CRS
+    reprojected_df = spark.sql(f"""
+        SELECT RS_Resample(raster, '{TARGET_CRS_EPSG_CODE}') AS reprojected_raster
+        FROM {clipped_view}
+    """)
+
+    print(f"Canopy TIFF clipped and reprojected from {input_tiff_path} to {TARGET_CRS_EPSG_CODE}")
+    return reprojected_df
+
+# if __name__ == "__main__":
+#     spark = create_spark_session()
+
+#     filter_building(spark, config, f"{READ_DIR}building/building.json", f"{SAVE_DIR}building.parquet")
+
+#     filter_street(spark, config, f"{READ_DIR}LION.geojson", f"{SAVE_DIR}street.parquet")
+
+#     zoning_list = ["nyco", "nysp", "nyzd"]
+#     for zoning_file in tqdm(zoning_list, desc="Processing zoning files"):
+#         filter_zoning(spark, config, f"{READ_DIR}{zoning_file}.geojson", f"{SAVE_DIR}{zoning_file}.parquet")
+
+#     spark.stop()
+#     print("Processing completed successfully.")

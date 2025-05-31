@@ -1,0 +1,24 @@
+[2025-05-17T06:11:48.208+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.terminate_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T06:11:48.234+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.terminate_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T06:11:48.235+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T06:11:48.249+0000] {taskinstance.py:1280} INFO - Starting attempt 3 of 4
+[2025-05-17T06:11:48.250+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T06:11:48.353+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): terminate_spark_session> on 2025-05-17 05:12:03.413965+00:00
+[2025-05-17T06:11:48.446+0000] {standard_task_runner.py:55} INFO - Started process 77 to run task
+[2025-05-17T06:11:48.450+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'terminate_spark_session', 'manual__2025-05-17T05:12:03.413965+00:00', '--job-id', '195', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmps5agqxht']
+[2025-05-17T06:11:48.451+0000] {standard_task_runner.py:83} INFO - Job 195: Subtask terminate_spark_session
+[2025-05-17T06:11:48.722+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.terminate_spark_session manual__2025-05-17T05:12:03.413965+00:00 [running]> on host d7500bab0b94
+[2025-05-17T06:11:48.951+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=terminate_spark_session
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-17T05:12:03.413965+00:00
+AIRFLOW_CTX_TRY_NUMBER=3
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-17T05:12:03.413965+00:00
+[2025-05-17T06:11:49.420+0000] {logging_mixin.py:137} INFO - Error terminating Spark session: Java gateway process exited before sending its port number
+[2025-05-17T06:11:49.421+0000] {python.py:177} INFO - Done. Returned value was: True
+[2025-05-17T06:11:49.513+0000] {taskinstance.py:1323} INFO - Marking task as SUCCESS. dag_id=uhi_index_analytics_pipeline_decompose, task_id=terminate_spark_session, execution_date=20250517T051203, start_date=20250517T061148, end_date=20250517T061149
+[2025-05-17T06:11:49.602+0000] {local_task_job.py:208} INFO - Task exited with return code 0
+[2025-05-17T06:11:49.633+0000] {taskinstance.py:2578} INFO - 0 downstream tasks scheduled from follow-on schedule check

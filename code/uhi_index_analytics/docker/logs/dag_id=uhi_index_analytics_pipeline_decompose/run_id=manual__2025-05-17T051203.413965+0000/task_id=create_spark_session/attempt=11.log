@@ -1,0 +1,253 @@
+[2025-05-17T07:26:21.311+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T07:26:21.327+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T07:26:21.328+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T07:26:21.329+0000] {taskinstance.py:1280} INFO - Starting attempt 11 of 11
+[2025-05-17T07:26:21.330+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T07:26:21.354+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): create_spark_session> on 2025-05-17 05:12:03.413965+00:00
+[2025-05-17T07:26:21.367+0000] {standard_task_runner.py:55} INFO - Started process 210 to run task
+[2025-05-17T07:26:21.371+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'create_spark_session', 'manual__2025-05-17T05:12:03.413965+00:00', '--job-id', '206', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmpax5yd34e']
+[2025-05-17T07:26:21.372+0000] {standard_task_runner.py:83} INFO - Job 206: Subtask create_spark_session
+[2025-05-17T07:26:20.023+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [running]> on host ee2bb044a094
+[2025-05-17T07:26:20.135+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=create_spark_session
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-17T05:12:03.413965+00:00
+AIRFLOW_CTX_TRY_NUMBER=11
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-17T05:12:03.413965+00:00
+[2025-05-17T07:26:30.869+0000] {warnings.py:110} WARNING - /home/***/.local/lib/python3.7/site-packages/pyspark/context.py:317: FutureWarning: Python 3.7 support is deprecated in Spark 3.4.
+  warnings.warn("Python 3.7 support is deprecated in Spark 3.4.", FutureWarning)
+
+[2025-05-17T07:26:43.967+0000] {taskinstance.py:1768} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.7/site-packages/airflow/operators/python.py", line 175, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.7/site-packages/airflow/operators/python.py", line 192, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/uhi_pipeline_dag_decompose.py", line 44, in create_spark_session
+    spark = spark_session.create_spark_session()
+  File "/opt/airflow/project_code/data_pipeline_test/spark_session.py", line 72, in create_spark_session
+    SedonaRegistrator.registerAll(spark_session)
+  File "/home/airflow/.local/lib/python3.7/site-packages/sedona/core/jvm/config.py", line 99, in new_func1
+    return func1(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.7/site-packages/sedona/register/geo_registrator.py", line 43, in registerAll
+    spark.sql("SELECT 1 as geom").count()
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/sql/dataframe.py", line 1195, in count
+    return int(self._jdf.count())
+  File "/home/airflow/.local/lib/python3.7/site-packages/py4j/java_gateway.py", line 1323, in __call__
+    answer, self.gateway_client, self.target_id, self.name)
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/errors/exceptions/captured.py", line 169, in deco
+    return f(*a, **kw)
+  File "/home/airflow/.local/lib/python3.7/site-packages/py4j/protocol.py", line 328, in get_return_value
+    format(target_id, ".", name), value)
+py4j.protocol.Py4JJavaError: An error occurred while calling o49.count.
+: org.apache.spark.SparkException: Job aborted due to stage failure: Task serialization failed: org.apache.spark.SparkException: Failed to register classes with Kryo
+org.apache.spark.SparkException: Failed to register classes with Kryo
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:185)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.withContextClassLoader(Utils.scala:240)
+	at org.apache.spark.serializer.KryoSerializer.newKryo(KryoSerializer.scala:173)
+	at org.apache.spark.serializer.KryoSerializer$$anon$1.create(KryoSerializer.scala:104)
+	at com.esotericsoftware.kryo.pool.KryoPoolQueueImpl.borrow(KryoPoolQueueImpl.java:48)
+	at org.apache.spark.serializer.KryoSerializer$PoolWrapper.borrow(KryoSerializer.scala:111)
+	at org.apache.spark.serializer.KryoSerializerInstance.borrowKryo(KryoSerializer.scala:351)
+	at org.apache.spark.serializer.KryoSerializationStream.<init>(KryoSerializer.scala:271)
+	at org.apache.spark.serializer.KryoSerializerInstance.serializeStream(KryoSerializer.scala:437)
+	at org.apache.spark.broadcast.TorrentBroadcast$.blockifyObject(TorrentBroadcast.scala:356)
+	at org.apache.spark.broadcast.TorrentBroadcast.writeBlocks(TorrentBroadcast.scala:160)
+	at org.apache.spark.broadcast.TorrentBroadcast.<init>(TorrentBroadcast.scala:99)
+	at org.apache.spark.broadcast.TorrentBroadcastFactory.newBroadcast(TorrentBroadcastFactory.scala:38)
+	at org.apache.spark.broadcast.BroadcastManager.newBroadcast(BroadcastManager.scala:78)
+	at org.apache.spark.SparkContext.broadcastInternal(SparkContext.scala:1543)
+	at org.apache.spark.SparkContext.broadcast(SparkContext.scala:1525)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1540)
+	at org.apache.spark.scheduler.DAGScheduler.submitStage(DAGScheduler.scala:1358)
+	at org.apache.spark.scheduler.DAGScheduler.handleMapStageSubmitted(DAGScheduler.scala:1339)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2939)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2928)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2917)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+Caused by: java.lang.ClassNotFoundException: org.apache.sedona.core.serde.SedonaKryoRegistrator
+	at java.base/java.lang.ClassLoader.findClass(ClassLoader.java:724)
+	at org.apache.spark.util.ParentClassLoader.findClass(ParentClassLoader.java:35)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:594)
+	at org.apache.spark.util.ParentClassLoader.loadClass(ParentClassLoader.java:40)
+	at org.apache.spark.util.ChildFirstURLClassLoader.loadClass(ChildFirstURLClassLoader.java:48)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:527)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at org.apache.spark.util.Utils$.classForName(Utils.scala:227)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$7(KryoSerializer.scala:180)
+	at scala.collection.TraversableLike.$anonfun$map$1(TraversableLike.scala:286)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at scala.collection.TraversableLike.map(TraversableLike.scala:286)
+	at scala.collection.TraversableLike.map$(TraversableLike.scala:279)
+	at scala.collection.AbstractTraversable.map(Traversable.scala:108)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:180)
+	... 23 more
+
+	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2790)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2726)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2725)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2725)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1550)
+	at org.apache.spark.scheduler.DAGScheduler.submitStage(DAGScheduler.scala:1358)
+	at org.apache.spark.scheduler.DAGScheduler.handleMapStageSubmitted(DAGScheduler.scala:1339)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2939)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2928)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2917)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+Caused by: org.apache.spark.SparkException: Failed to register classes with Kryo
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:185)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.withContextClassLoader(Utils.scala:240)
+	at org.apache.spark.serializer.KryoSerializer.newKryo(KryoSerializer.scala:173)
+	at org.apache.spark.serializer.KryoSerializer$$anon$1.create(KryoSerializer.scala:104)
+	at com.esotericsoftware.kryo.pool.KryoPoolQueueImpl.borrow(KryoPoolQueueImpl.java:48)
+	at org.apache.spark.serializer.KryoSerializer$PoolWrapper.borrow(KryoSerializer.scala:111)
+	at org.apache.spark.serializer.KryoSerializerInstance.borrowKryo(KryoSerializer.scala:351)
+	at org.apache.spark.serializer.KryoSerializationStream.<init>(KryoSerializer.scala:271)
+	at org.apache.spark.serializer.KryoSerializerInstance.serializeStream(KryoSerializer.scala:437)
+	at org.apache.spark.broadcast.TorrentBroadcast$.blockifyObject(TorrentBroadcast.scala:356)
+	at org.apache.spark.broadcast.TorrentBroadcast.writeBlocks(TorrentBroadcast.scala:160)
+	at org.apache.spark.broadcast.TorrentBroadcast.<init>(TorrentBroadcast.scala:99)
+	at org.apache.spark.broadcast.TorrentBroadcastFactory.newBroadcast(TorrentBroadcastFactory.scala:38)
+	at org.apache.spark.broadcast.BroadcastManager.newBroadcast(BroadcastManager.scala:78)
+	at org.apache.spark.SparkContext.broadcastInternal(SparkContext.scala:1543)
+	at org.apache.spark.SparkContext.broadcast(SparkContext.scala:1525)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1540)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: org.apache.sedona.core.serde.SedonaKryoRegistrator
+	at java.base/java.lang.ClassLoader.findClass(ClassLoader.java:724)
+	at org.apache.spark.util.ParentClassLoader.findClass(ParentClassLoader.java:35)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:594)
+	at org.apache.spark.util.ParentClassLoader.loadClass(ParentClassLoader.java:40)
+	at org.apache.spark.util.ChildFirstURLClassLoader.loadClass(ChildFirstURLClassLoader.java:48)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:527)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at org.apache.spark.util.Utils$.classForName(Utils.scala:227)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$7(KryoSerializer.scala:180)
+	at scala.collection.TraversableLike.$anonfun$map$1(TraversableLike.scala:286)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at scala.collection.TraversableLike.map(TraversableLike.scala:286)
+	at scala.collection.TraversableLike.map$(TraversableLike.scala:279)
+	at scala.collection.AbstractTraversable.map(Traversable.scala:108)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:180)
+	... 23 more
+
+[2025-05-17T07:26:44.193+0000] {taskinstance.py:1323} INFO - Marking task as FAILED. dag_id=uhi_index_analytics_pipeline_decompose, task_id=create_spark_session, execution_date=20250517T051203, start_date=20250517T072621, end_date=20250517T072644
+[2025-05-17T07:26:44.225+0000] {standard_task_runner.py:105} ERROR - Failed to execute job 206 for task create_spark_session (An error occurred while calling o49.count.
+: org.apache.spark.SparkException: Job aborted due to stage failure: Task serialization failed: org.apache.spark.SparkException: Failed to register classes with Kryo
+org.apache.spark.SparkException: Failed to register classes with Kryo
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:185)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.withContextClassLoader(Utils.scala:240)
+	at org.apache.spark.serializer.KryoSerializer.newKryo(KryoSerializer.scala:173)
+	at org.apache.spark.serializer.KryoSerializer$$anon$1.create(KryoSerializer.scala:104)
+	at com.esotericsoftware.kryo.pool.KryoPoolQueueImpl.borrow(KryoPoolQueueImpl.java:48)
+	at org.apache.spark.serializer.KryoSerializer$PoolWrapper.borrow(KryoSerializer.scala:111)
+	at org.apache.spark.serializer.KryoSerializerInstance.borrowKryo(KryoSerializer.scala:351)
+	at org.apache.spark.serializer.KryoSerializationStream.<init>(KryoSerializer.scala:271)
+	at org.apache.spark.serializer.KryoSerializerInstance.serializeStream(KryoSerializer.scala:437)
+	at org.apache.spark.broadcast.TorrentBroadcast$.blockifyObject(TorrentBroadcast.scala:356)
+	at org.apache.spark.broadcast.TorrentBroadcast.writeBlocks(TorrentBroadcast.scala:160)
+	at org.apache.spark.broadcast.TorrentBroadcast.<init>(TorrentBroadcast.scala:99)
+	at org.apache.spark.broadcast.TorrentBroadcastFactory.newBroadcast(TorrentBroadcastFactory.scala:38)
+	at org.apache.spark.broadcast.BroadcastManager.newBroadcast(BroadcastManager.scala:78)
+	at org.apache.spark.SparkContext.broadcastInternal(SparkContext.scala:1543)
+	at org.apache.spark.SparkContext.broadcast(SparkContext.scala:1525)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1540)
+	at org.apache.spark.scheduler.DAGScheduler.submitStage(DAGScheduler.scala:1358)
+	at org.apache.spark.scheduler.DAGScheduler.handleMapStageSubmitted(DAGScheduler.scala:1339)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2939)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2928)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2917)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+Caused by: java.lang.ClassNotFoundException: org.apache.sedona.core.serde.SedonaKryoRegistrator
+	at java.base/java.lang.ClassLoader.findClass(ClassLoader.java:724)
+	at org.apache.spark.util.ParentClassLoader.findClass(ParentClassLoader.java:35)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:594)
+	at org.apache.spark.util.ParentClassLoader.loadClass(ParentClassLoader.java:40)
+	at org.apache.spark.util.ChildFirstURLClassLoader.loadClass(ChildFirstURLClassLoader.java:48)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:527)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at org.apache.spark.util.Utils$.classForName(Utils.scala:227)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$7(KryoSerializer.scala:180)
+	at scala.collection.TraversableLike.$anonfun$map$1(TraversableLike.scala:286)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at scala.collection.TraversableLike.map(TraversableLike.scala:286)
+	at scala.collection.TraversableLike.map$(TraversableLike.scala:279)
+	at scala.collection.AbstractTraversable.map(Traversable.scala:108)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:180)
+	... 23 more
+
+	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2790)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2726)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2725)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2725)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1550)
+	at org.apache.spark.scheduler.DAGScheduler.submitStage(DAGScheduler.scala:1358)
+	at org.apache.spark.scheduler.DAGScheduler.handleMapStageSubmitted(DAGScheduler.scala:1339)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2939)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2928)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2917)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+Caused by: org.apache.spark.SparkException: Failed to register classes with Kryo
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:185)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.withContextClassLoader(Utils.scala:240)
+	at org.apache.spark.serializer.KryoSerializer.newKryo(KryoSerializer.scala:173)
+	at org.apache.spark.serializer.KryoSerializer$$anon$1.create(KryoSerializer.scala:104)
+	at com.esotericsoftware.kryo.pool.KryoPoolQueueImpl.borrow(KryoPoolQueueImpl.java:48)
+	at org.apache.spark.serializer.KryoSerializer$PoolWrapper.borrow(KryoSerializer.scala:111)
+	at org.apache.spark.serializer.KryoSerializerInstance.borrowKryo(KryoSerializer.scala:351)
+	at org.apache.spark.serializer.KryoSerializationStream.<init>(KryoSerializer.scala:271)
+	at org.apache.spark.serializer.KryoSerializerInstance.serializeStream(KryoSerializer.scala:437)
+	at org.apache.spark.broadcast.TorrentBroadcast$.blockifyObject(TorrentBroadcast.scala:356)
+	at org.apache.spark.broadcast.TorrentBroadcast.writeBlocks(TorrentBroadcast.scala:160)
+	at org.apache.spark.broadcast.TorrentBroadcast.<init>(TorrentBroadcast.scala:99)
+	at org.apache.spark.broadcast.TorrentBroadcastFactory.newBroadcast(TorrentBroadcastFactory.scala:38)
+	at org.apache.spark.broadcast.BroadcastManager.newBroadcast(BroadcastManager.scala:78)
+	at org.apache.spark.SparkContext.broadcastInternal(SparkContext.scala:1543)
+	at org.apache.spark.SparkContext.broadcast(SparkContext.scala:1525)
+	at org.apache.spark.scheduler.DAGScheduler.submitMissingTasks(DAGScheduler.scala:1540)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: org.apache.sedona.core.serde.SedonaKryoRegistrator
+	at java.base/java.lang.ClassLoader.findClass(ClassLoader.java:724)
+	at org.apache.spark.util.ParentClassLoader.findClass(ParentClassLoader.java:35)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:594)
+	at org.apache.spark.util.ParentClassLoader.loadClass(ParentClassLoader.java:40)
+	at org.apache.spark.util.ChildFirstURLClassLoader.loadClass(ChildFirstURLClassLoader.java:48)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:527)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at org.apache.spark.util.Utils$.classForName(Utils.scala:227)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$7(KryoSerializer.scala:180)
+	at scala.collection.TraversableLike.$anonfun$map$1(TraversableLike.scala:286)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at scala.collection.TraversableLike.map(TraversableLike.scala:286)
+	at scala.collection.TraversableLike.map$(TraversableLike.scala:279)
+	at scala.collection.AbstractTraversable.map(Traversable.scala:108)
+	at org.apache.spark.serializer.KryoSerializer.$anonfun$newKryo$5(KryoSerializer.scala:180)
+	... 23 more
+; 210)
+[2025-05-17T07:26:44.271+0000] {local_task_job.py:208} INFO - Task exited with return code 1
+[2025-05-17T07:26:44.340+0000] {taskinstance.py:2578} INFO - 0 downstream tasks scheduled from follow-on schedule check

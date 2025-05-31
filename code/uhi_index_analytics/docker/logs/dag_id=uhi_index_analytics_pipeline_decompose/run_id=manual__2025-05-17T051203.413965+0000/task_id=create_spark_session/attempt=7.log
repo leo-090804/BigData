@@ -1,0 +1,44 @@
+[2025-05-17T06:35:41.934+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T06:35:41.953+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-17T06:35:41.954+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T06:35:41.955+0000] {taskinstance.py:1280} INFO - Starting attempt 7 of 8
+[2025-05-17T06:35:41.956+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-17T06:35:41.981+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): create_spark_session> on 2025-05-17 05:12:03.413965+00:00
+[2025-05-17T06:35:42.000+0000] {standard_task_runner.py:55} INFO - Started process 63 to run task
+[2025-05-17T06:35:42.004+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'create_spark_session', 'manual__2025-05-17T05:12:03.413965+00:00', '--job-id', '197', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmphj84z_4w']
+[2025-05-17T06:35:42.005+0000] {standard_task_runner.py:83} INFO - Job 197: Subtask create_spark_session
+[2025-05-17T06:35:42.116+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.create_spark_session manual__2025-05-17T05:12:03.413965+00:00 [running]> on host b35e95b6efea
+[2025-05-17T06:35:42.703+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=create_spark_session
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-17T05:12:03.413965+00:00
+AIRFLOW_CTX_TRY_NUMBER=7
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-17T05:12:03.413965+00:00
+[2025-05-17T06:35:43.170+0000] {taskinstance.py:1768} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.7/site-packages/airflow/operators/python.py", line 175, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.7/site-packages/airflow/operators/python.py", line 192, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/uhi_pipeline_dag_decompose.py", line 44, in create_spark_session
+    spark = spark_session.create_spark_session()
+  File "/opt/airflow/project_code/data_pipeline_test/spark_session.py", line 69, in create_spark_session
+    spark_session = builder.getOrCreate()
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/sql/session.py", line 477, in getOrCreate
+    sc = SparkContext.getOrCreate(sparkConf)
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/context.py", line 512, in getOrCreate
+    SparkContext(conf=conf or SparkConf())
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/context.py", line 198, in __init__
+    SparkContext._ensure_initialized(self, gateway=gateway, conf=conf)
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/context.py", line 432, in _ensure_initialized
+    SparkContext._gateway = gateway or launch_gateway(conf)
+  File "/home/airflow/.local/lib/python3.7/site-packages/pyspark/java_gateway.py", line 106, in launch_gateway
+    raise RuntimeError("Java gateway process exited before sending its port number")
+RuntimeError: Java gateway process exited before sending its port number
+[2025-05-17T06:35:43.197+0000] {taskinstance.py:1323} INFO - Marking task as UP_FOR_RETRY. dag_id=uhi_index_analytics_pipeline_decompose, task_id=create_spark_session, execution_date=20250517T051203, start_date=20250517T063541, end_date=20250517T063543
+[2025-05-17T06:35:43.581+0000] {standard_task_runner.py:105} ERROR - Failed to execute job 197 for task create_spark_session (Java gateway process exited before sending its port number; 63)
+[2025-05-17T06:35:43.629+0000] {local_task_job.py:208} INFO - Task exited with return code 1
+[2025-05-17T06:35:43.689+0000] {taskinstance.py:2578} INFO - 0 downstream tasks scheduled from follow-on schedule check

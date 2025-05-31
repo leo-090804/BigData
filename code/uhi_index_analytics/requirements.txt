@@ -13,3 +13,14 @@ PyYAML
 ijson
 tqdm
 cdsapi
+google-cloud-storage
+google-auth
+rtree
+scipy
+scikit-learn
+scikit-image
+apache-airflow==2.5.1
+apache-airflow-providers-apache-spark
+# apache-spark
+apache-airflow-providers-google
+numpy

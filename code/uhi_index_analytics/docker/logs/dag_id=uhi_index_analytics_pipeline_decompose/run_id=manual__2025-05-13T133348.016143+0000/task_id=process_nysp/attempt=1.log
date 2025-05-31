@@ -1,0 +1,25 @@
+[2025-05-13T13:51:07.845+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_nysp manual__2025-05-13T13:33:48.016143+00:00 [queued]>
+[2025-05-13T13:51:07.891+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_nysp manual__2025-05-13T13:33:48.016143+00:00 [queued]>
+[2025-05-13T13:51:07.892+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-13T13:51:07.897+0000] {taskinstance.py:1280} INFO - Starting attempt 1 of 2
+[2025-05-13T13:51:07.899+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-13T13:51:07.978+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): process_nysp> on 2025-05-13 13:33:48.016143+00:00
+[2025-05-13T13:51:08.010+0000] {standard_task_runner.py:55} INFO - Started process 85 to run task
+[2025-05-13T13:51:08.047+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'process_nysp', 'manual__2025-05-13T13:33:48.016143+00:00', '--job-id', '112', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmpimf9qj0n']
+[2025-05-13T13:51:08.049+0000] {standard_task_runner.py:83} INFO - Job 112: Subtask process_nysp
+[2025-05-13T13:51:08.867+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.process_nysp manual__2025-05-13T13:33:48.016143+00:00 [running]> on host 869b990513f1
+[2025-05-13T13:51:09.316+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=process_nysp
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-13T13:33:48.016143+00:00
+AIRFLOW_CTX_TRY_NUMBER=1
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-13T13:33:48.016143+00:00
+[2025-05-13T13:51:09.954+0000] {logging_mixin.py:137} INFO - Load data successfully!
+[2025-05-13T13:51:10.455+0000] {logging_mixin.py:137} INFO - NYSP data processed!
+[2025-05-13T13:51:10.456+0000] {python.py:177} INFO - Done. Returned value was: True
+[2025-05-13T13:51:10.519+0000] {taskinstance.py:1323} INFO - Marking task as SUCCESS. dag_id=uhi_index_analytics_pipeline_decompose, task_id=process_nysp, execution_date=20250513T133348, start_date=20250513T135107, end_date=20250513T135110
+[2025-05-13T13:51:10.592+0000] {local_task_job.py:208} INFO - Task exited with return code 0
+[2025-05-13T13:51:10.687+0000] {taskinstance.py:2578} INFO - 1 downstream tasks scheduled from follow-on schedule check

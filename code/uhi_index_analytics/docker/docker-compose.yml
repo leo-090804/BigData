@@ -1,0 +1,183 @@
+x-spark-common:
+  &spark-common
+  # build:
+  #   context: ../ # Change context to the parent directory (uhi_index_analytics)
+  #   dockerfile: docker/Dockerfile # Specify path to Dockerfile relative to new context
+  # environment:
+  #   SPARK_MASTER: spark://spark-master:7077
+  #   SPARK_WORKER_CORES: 2
+  #   SPARK_WORKER_MEMORY: 4g
+  #   SPARK_LOCAL_IP: spark-worker
+  volumes:
+    - ../:/opt/spark/project_code
+  # depends_on:
+  #   &spark-common-depends-on
+  #   spark-master:
+  #     condition: service_healthy
+
+x-airflow-common:
+  &airflow-common
+  build:
+    context: ../ # Change context to the parent directory (uhi_index_analytics)
+    dockerfile: docker/Dockerfile # Specify path to Dockerfile relative to new context
+  environment:
+    &airflow-common-env
+    # AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0 # For CeleryExecutor
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow # For CeleryExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: 'YOUR_GENERATED_FERNET_KEY' # <<< REPLACE THIS WITH YOUR KEY
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
+    AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'True'
+    PYTHONPATH: /opt/airflow/project_code:/home/airflow/.local/lib/python3.7/site-packages # Add user site-packages
+    SPARK_HOME: /home/airflow/.local/lib/python3.7/site-packages/pyspark # Added environment variables for your specific modules
+    AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: 60
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - ../:/opt/airflow/project_code
+  depends_on:
+    &airflow-common-depends-on
+    postgres:
+      condition: service_healthy
+    redis: # Add dependency on Redis for services that need Celery
+      condition: service_healthy
+  restart: always
+  user: "${AIRFLOW_UID:-50000}:0"
+
+services:
+  spark-master:
+    <<: *spark-common
+    image: bitnami/spark:3.5.0
+    ports:
+      - "8081:8081"
+      - "7077:7077"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8081"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+  
+  spark-worker:
+    <<: *spark-common
+    image: bitnami/spark:3.5.0
+    ports:
+      - "8082:8082"
+    # depends_on:
+    #   <<: *spark-common-depends-on
+    #   spark-master:
+    #     condition: service_healthy
+    environment:
+      SPARK_MASTER_URL: spark://spark-master:7077
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 4g
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8082"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  redis: # New Redis service
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+    restart: always
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-worker: # New Airflow worker service
+    <<: *airflow-common
+    command: celery worker
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on # Inherits postgres and redis dependency
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        # Install project dependencies - REMOVED as they are now in the Docker image
+        echo "Dependencies are pre-installed in the Docker image."
+        
+        # Ensure the directories Airflow needs are writable by the Airflow user
+        mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins
+        chown -R "${AIRFLOW_UID:-50000}:0" /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins
+        
+        # Initialize or upgrade the database
+        airflow db upgrade
+        
+        # Create admin user (Uncommented and kept the robust version)
+        echo "Attempting to create Airflow admin user..."
+        airflow users create \
+          --username admin \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com \
+          --password admin
+        
+        USER_CREATE_STATUS=$?
+        if [ ${USER_CREATE_STATUS} -eq 0 ]; then
+          echo "Admin user created successfully."
+        else
+          echo "Failed to create admin user (exit code: ${USER_CREATE_STATUS}). This might be because the user already exists."
+          echo "Listing users to verify..."
+          airflow users list || echo "Failed to list users."
+        fi
+        echo "Admin user creation process finished."
+    restart: on-failure
+
+volumes:
+  postgres-db-volume:

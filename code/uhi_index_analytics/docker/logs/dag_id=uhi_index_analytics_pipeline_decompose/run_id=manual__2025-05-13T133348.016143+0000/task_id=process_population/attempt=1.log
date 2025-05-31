@@ -1,0 +1,25 @@
+[2025-05-13T13:51:06.284+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_population manual__2025-05-13T13:33:48.016143+00:00 [queued]>
+[2025-05-13T13:51:06.380+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_population manual__2025-05-13T13:33:48.016143+00:00 [queued]>
+[2025-05-13T13:51:06.381+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-13T13:51:06.382+0000] {taskinstance.py:1280} INFO - Starting attempt 1 of 2
+[2025-05-13T13:51:06.383+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-13T13:51:06.566+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): process_population> on 2025-05-13 13:33:48.016143+00:00
+[2025-05-13T13:51:06.601+0000] {standard_task_runner.py:55} INFO - Started process 83 to run task
+[2025-05-13T13:51:06.749+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'process_population', 'manual__2025-05-13T13:33:48.016143+00:00', '--job-id', '110', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmp0bufzf4_']
+[2025-05-13T13:51:06.755+0000] {standard_task_runner.py:83} INFO - Job 110: Subtask process_population
+[2025-05-13T13:51:07.793+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.process_population manual__2025-05-13T13:33:48.016143+00:00 [running]> on host 869b990513f1
+[2025-05-13T13:51:08.274+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=process_population
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-13T13:33:48.016143+00:00
+AIRFLOW_CTX_TRY_NUMBER=1
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-13T13:33:48.016143+00:00
+[2025-05-13T13:51:09.120+0000] {logging_mixin.py:137} INFO - (16, 19)
+[2025-05-13T13:51:09.239+0000] {logging_mixin.py:137} INFO - Population data processed!
+[2025-05-13T13:51:09.241+0000] {python.py:177} INFO - Done. Returned value was: True
+[2025-05-13T13:51:09.355+0000] {taskinstance.py:1323} INFO - Marking task as SUCCESS. dag_id=uhi_index_analytics_pipeline_decompose, task_id=process_population, execution_date=20250513T133348, start_date=20250513T135106, end_date=20250513T135109
+[2025-05-13T13:51:09.469+0000] {local_task_job.py:208} INFO - Task exited with return code 0
+[2025-05-13T13:51:09.595+0000] {taskinstance.py:2578} INFO - 0 downstream tasks scheduled from follow-on schedule check

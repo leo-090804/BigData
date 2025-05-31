@@ -19,32 +19,32 @@ with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 
-def create_spark_session(
-    core: int = 6,
-    driver_menory: str = "8g",
-):
-    # Create a Sedona Context using individual config calls
-    builder = SedonaContext.builder()
+# def create_spark_session(
+#     core: int = 6,
+#     driver_menory: str = "8g",
+# ):
+#     # Create a Sedona Context using individual config calls
+#     builder = SedonaContext.builder()
 
-    # Set application name
-    builder = builder.config("spark.app.name", "GeoSpatialPreprocessing")
+#     # Set application name
+#     builder = builder.config("spark.app.name", "GeoSpatialPreprocessing")
 
-    # Add each configuration individually
-    builder = builder.config(
-        "spark.jars.packages",
-        "org.apache.sedona:sedona-spark-shaded-3.0_2.12:1.4.1,org.datasyslab:geotools-wrapper:1.4.0-28.2",
-    )
-    builder = builder.master(f"local[{core}]")
-    builder = builder.config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    builder = builder.config("spark.sql.extensions", "org.apache.sedona.sql.SedonaSqlExtensions")
-    builder = builder.config("spark.sql.catalog.sedona", "org.apache.sedona.sql.SpatialCatalog")
-    builder = builder.config("spark.sql.catalog.sedona.options", "{}")
-    builder = builder.config("spark.driver.memory", f"{driver_menory}")
+#     # Add each configuration individually
+#     builder = builder.config(
+#         "spark.jars.packages",
+#         "org.apache.sedona:sedona-spark-shaded-3.0_2.12:1.4.1,org.datasyslab:geotools-wrapper:1.4.0-28.2",
+#     )
+#     builder = builder.master(f"local[{core}]")
+#     builder = builder.config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+#     builder = builder.config("spark.sql.extensions", "org.apache.sedona.sql.SedonaSqlExtensions")
+#     builder = builder.config("spark.sql.catalog.sedona", "org.apache.sedona.sql.SpatialCatalog")
+#     builder = builder.config("spark.sql.catalog.sedona.options", "{}")
+#     builder = builder.config("spark.driver.memory", f"{driver_menory}")
 
-    # Create and return the Sedona context
-    sedona = builder.getOrCreate()
+#     # Create and return the Sedona context
+#     sedona = builder.getOrCreate()
 
-    return sedona
+#     return sedona
 
 
 def extract_feature_building(spark, readfile: str, savefile: str):

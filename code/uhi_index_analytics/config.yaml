@@ -2,6 +2,12 @@
 coords:  [-74.01, 40.75, -73.86, 40.88]
 time_window: "2021-06-01/2021-09-01"
 
+# Google Cloud Storage configuration
+gcs_config:
+  project_id: "your-project-id"
+  bucket_name: "your-bucket-name"
+  location: "us-central1"  # Optional: specify bucket location
+
 satellite_config:
   url: "https://planetarycomputer.microsoft.com/api/stac/v1"
 

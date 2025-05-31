@@ -1,0 +1,24 @@
+[2025-05-18T10:24:23.824+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_street manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-18T10:24:23.878+0000] {taskinstance.py:1083} INFO - Dependencies all met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_street manual__2025-05-17T05:12:03.413965+00:00 [queued]>
+[2025-05-18T10:24:23.880+0000] {taskinstance.py:1279} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-18T10:24:23.882+0000] {taskinstance.py:1280} INFO - Starting attempt 3 of 4
+[2025-05-18T10:24:23.883+0000] {taskinstance.py:1281} INFO - 
+--------------------------------------------------------------------------------
+[2025-05-18T10:24:23.945+0000] {taskinstance.py:1300} INFO - Executing <Task(PythonOperator): process_street> on 2025-05-17 05:12:03.413965+00:00
+[2025-05-18T10:24:24.142+0000] {standard_task_runner.py:55} INFO - Started process 905 to run task
+[2025-05-18T10:24:24.164+0000] {standard_task_runner.py:82} INFO - Running: ['***', 'tasks', 'run', 'uhi_index_analytics_pipeline_decompose', 'process_street', 'manual__2025-05-17T05:12:03.413965+00:00', '--job-id', '234', '--raw', '--subdir', 'DAGS_FOLDER/uhi_pipeline_dag_decompose.py', '--cfg-path', '/tmp/tmp3g1gp59_']
+[2025-05-18T10:24:24.167+0000] {standard_task_runner.py:83} INFO - Job 234: Subtask process_street
+[2025-05-18T10:24:24.840+0000] {task_command.py:388} INFO - Running <TaskInstance: uhi_index_analytics_pipeline_decompose.process_street manual__2025-05-17T05:12:03.413965+00:00 [running]> on host ee2bb044a094
+[2025-05-18T10:24:25.380+0000] {taskinstance.py:1509} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=uhi_index_analytics_pipeline_decompose
+AIRFLOW_CTX_TASK_ID=process_street
+AIRFLOW_CTX_EXECUTION_DATE=2025-05-17T05:12:03.413965+00:00
+AIRFLOW_CTX_TRY_NUMBER=3
+AIRFLOW_CTX_DAG_RUN_ID=manual__2025-05-17T05:12:03.413965+00:00
+[2025-05-18T10:25:14.796+0000] {local_task_job.py:112} ERROR - Received SIGTERM. Terminating subprocesses
+[2025-05-18T10:25:14.810+0000] {process_utils.py:133} INFO - Sending Signals.SIGTERM to group 905. PIDs of all processes in the group: [905]
+[2025-05-18T10:25:14.814+0000] {process_utils.py:84} INFO - Sending the signal Signals.SIGTERM to group 905
+[2025-05-21T07:05:15.077+0000] {taskinstance.py:1077} INFO - Dependencies not met for <TaskInstance: uhi_index_analytics_pipeline_decompose.process_street manual__2025-05-17T05:12:03.413965+00:00 [failed]>, dependency 'Task Instance State' FAILED: Task is in the 'failed' state.
+[2025-05-21T07:05:15.172+0000] {local_task_job.py:147} INFO - Task is not able to be run
